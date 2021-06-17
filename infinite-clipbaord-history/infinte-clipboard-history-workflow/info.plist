@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>io.zalad.alfredclipboard</string>
+	<key>connections</key>
+	<dict>
+		<key>1E9E5605-FE56-4EBF-A7AD-7E3886316DA3</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>50B0CD10-4D52-4898-9C05-DD3A34A829C3</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>50B0CD10-4D52-4898-9C05-DD3A34A829C3</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>E0A4E17B-6526-430C-93C2-7A268A76649D</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Nick Sweeting</string>
+	<key>description</key>
+	<string>Store and search infinite Alfred clipboard history.</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Infinite Clipboard History</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>100</integer>
+				<key>keyword</key>
+				<string>cc</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>2</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string>Searching...</string>
+				<key>script</key>
+				<string># This needs to be used with alfred-clipboard.sh found here:
+# https://gist.github.com/pirate/6551e1c00a7c4b0c607762930e22804c
+
+QUERY="$@"
+
+sqlite3 /Users/rohit.bhosle/Clipboard/all.sqlite3 "
+    SELECT '{\"items\": [' || group_concat(match) || ']}'
+    FROM (
+        SELECT json_object(
+            'valid', 1,
+            'uuid', ts,
+            'title', substr(item, 1, 120),
+            'arg', item
+        ) as match
+        FROM clipboard
+        WHERE item LIKE '%${QUERY}%'
+        ORDER BY ts DESC
+        LIMIT 20
+    );
+"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string>test.sh</string>
+				<key>subtext</key>
+				<string>Search the unlimited clipboard history</string>
+				<key>title</key>
+				<string>Infinite Clipboard History</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>50B0CD10-4D52-4898-9C05-DD3A34A829C3</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<false/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>ignoredynamicplaceholders</key>
+				<false/>
+				<key>transient</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>E0A4E17B-6526-430C-93C2-7A268A76649D</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>subtext</key>
+				<string>Search inifinite clipboard history</string>
+				<key>text</key>
+				<string>Clipboard History</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.fallback</string>
+			<key>uid</key>
+			<string>1E9E5605-FE56-4EBF-A7AD-7E3886316DA3</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>More info here:
+
+https://gist.github.com/pirate/6551e1c00a7c4b0c607762930e22804c
+https://www.alfredforum.com/topic/10969-keep-clipboard-history-forever/?tab=comments#comment-68859</string>
+	<key>uidata</key>
+	<dict>
+		<key>1E9E5605-FE56-4EBF-A7AD-7E3886316DA3</key>
+		<dict>
+			<key>xpos</key>
+			<integer>110</integer>
+			<key>ypos</key>
+			<integer>135</integer>
+		</dict>
+		<key>50B0CD10-4D52-4898-9C05-DD3A34A829C3</key>
+		<dict>
+			<key>note</key>
+			<string>Alfred 3 now supports JSON as the Script Filter output. This is the recommended output.</string>
+			<key>xpos</key>
+			<integer>365</integer>
+			<key>ypos</key>
+			<integer>105</integer>
+		</dict>
+		<key>E0A4E17B-6526-430C-93C2-7A268A76649D</key>
+		<dict>
+			<key>xpos</key>
+			<integer>615</integer>
+			<key>ypos</key>
+			<integer>115</integer>
+		</dict>
+	</dict>
+	<key>variablesdontexport</key>
+	<array/>
+	<key>version</key>
+	<string>1.0</string>
+	<key>webaddress</key>
+	<string>https://github.com/pirate</string>
+</dict>
+</plist>
